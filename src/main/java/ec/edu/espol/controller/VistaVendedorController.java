@@ -11,6 +11,7 @@ import ec.edu.espol.proyectofinal.App;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,6 +23,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -33,6 +35,8 @@ import javafx.scene.text.Text;
 public class VistaVendedorController implements Initializable {
     @FXML
     private GridPane PanelVendedor;
+    @FXML
+    private HBox PanelBotones;
 
     /**
      * Initializes the controller class.
@@ -79,8 +83,10 @@ public class VistaVendedorController implements Initializable {
         Button br=new Button("REGISTRAR");
         br.prefWidth(90);
         br.prefHeight(45);
-        br.setAlignment(Pos.CENTER_RIGHT);
-        PanelVendedor.add(br, 3, 2);
+        br.setAlignment(Pos.BOTTOM_RIGHT);
+        PanelBotones.getChildren().add(br);
+        br.setLayoutX(450);
+        br.setLayoutY(30);
         br.setOnMouseClicked((MouseEvent e)->{
             Alert a;
             if(tf1.getText()!=null && tf2.getText()!=null && tf3.getText()!=null && tf4.getText()!=null && pw.getText()!=null){
