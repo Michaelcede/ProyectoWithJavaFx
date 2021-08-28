@@ -5,6 +5,7 @@
  */
 package ec.edu.espol.model;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -12,12 +13,13 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Dell
  */
-public class Persona {
+public class Persona implements Serializable{
     protected String nombres;
     protected String apellidos;
     protected String correo;
     protected String organizacion;
     protected String clave;
+    private static final long serialVersionUID = 8799656478674716638L;
 
     public Persona(String nombres, String apellidos, String correo, String organizacion, String clave) {
         this.nombres = nombres;
