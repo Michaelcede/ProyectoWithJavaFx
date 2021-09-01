@@ -10,8 +10,8 @@ import ec.edu.espol.model.Vendedor;
 import ec.edu.espol.proyectofinal.App;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,6 +23,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -34,14 +35,15 @@ import javafx.scene.text.Text;
 public class VistaVendedorController implements Initializable {
     @FXML
     private GridPane PanelVendedor;
-    private ArrayList<Vendedor>vendedores=new ArrayList<>();
+    @FXML
+    private HBox PanelBotones;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.vendedores=Vendedor.LeerVendedorInFile();
-
+        // TODO
     }    
 
     @FXML
@@ -81,32 +83,38 @@ public class VistaVendedorController implements Initializable {
         Button br=new Button("REGISTRAR");
         br.prefWidth(90);
         br.prefHeight(45);
-        br.setAlignment(Pos.CENTER_RIGHT);
-        PanelVendedor.add(br, 3, 2);
+        br.setAlignment(Pos.BOTTOM_RIGHT);
+        PanelBotones.getChildren().add(br);
+        br.setLayoutX(450);
+        br.setLayoutY(30);
         br.setOnMouseClicked((MouseEvent e)->{
-            tf1.setText("");
-            tf2.setText("");
-            tf3.setText("");
-            tf4.setText("");
-            pw.setText("");
             Alert a;
-            if(tf1.getText()!=null && tf2.getText()!=null && tf3.getText()!=null && tf4.getText()!=null && pw.getText()!=null){
+            if(!(tf1.getText().isEmpty() || tf2.getText().isEmpty() || tf3.getText().isEmpty() || tf4.getText().isEmpty() || pw.getText().isEmpty())){
                 String Nombre=tf1.getText();
                 String Apellido=tf2.getText();
                 String Correo=tf4.getText();
                 String Organizacion=tf3.getText();
                 String Clave=Persona.convertirSHA256(pw.getText());
                 Vendedor v=new Vendedor(Nombre,Apellido,Correo,Organizacion,Clave);
-                if(Vendedor.ComprobarVendedorInFile(v)==false && Persona.validarEmail(tf4.getText())==true){
-                        this.vendedores.add(v);
-                        Vendedor.RegistrarVendedorFile(this.vendedores);
+                if(Persona.validarEmail(tf4.getText())==true){
+                    if(Vendedor.comprobarEstadoenLista(v)==false){
+                        Vendedor.RegistrarVendedorFile(v);
                         a=new Alert(AlertType.CONFIRMATION,"Usuario guardado con exito");
+                        a.show();  
+                    }
+                    else{
+                        a=new Alert(AlertType.WARNING,"Correo ya resgistrado, ingrese otro");
                         a.show();
+                    }
                 }
                 else{
-                    a=new Alert(AlertType.WARNING,"Espacios en Blanco/correo invalido/ correo ya registrado");
+                    a=new Alert(AlertType.WARNING,"formato correo erroneo");
                     a.show();
-                }      
+                }
+            }
+            else{
+               a=new Alert(AlertType.WARNING,"No deben haber campos vacios"); 
+               a.show();
             }
         });
         
@@ -119,11 +127,5 @@ public class VistaVendedorController implements Initializable {
 
     @FXML
     private void AceptarOferta(MouseEvent event) {
-    }
-    class CorreoException extends Exception{
-        public CorreoException(String message) {
-            super(message);
-        }
-        
     }
 }
