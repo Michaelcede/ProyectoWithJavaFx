@@ -121,8 +121,13 @@ public class VistaVendedorController implements Initializable {
 
     @FXML
     private void IngresoUsuario(MouseEvent event) {
-        PanelVendedor.getChildren().clear();
-
+        try {
+            FXMLLoader fxmloader=App.LoadFXMLLoader("VistaVehiculo");
+            App.setRoot(fxmloader);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } 
+        
     }
 
     @FXML
