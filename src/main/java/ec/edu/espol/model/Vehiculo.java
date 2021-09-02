@@ -5,14 +5,22 @@
  */
 package ec.edu.espol.model;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+
 
 
 /**
  *
  * @author micha
  */
-public class Vehiculo {
-    private int id;
+public class Vehiculo implements Serializable {
     private String tipo; //(auto,camioneta,motocicleta)
     private String placa;
     private String marca;
@@ -27,9 +35,11 @@ public class Vehiculo {
     private String traccion; //aplica para camionetas
     private double precio;
     
+    private static final long serialVersionUID = 8799656478674716638L;
+    ArrayList<Vehiculo> vehiculos =new ArrayList<>();
+    
     //METODO CONSTRUCTOR PARA AUTOS
-    public Vehiculo(int id, String placa, String tipo, String marca, String modelo, String tipo_de_motor, int año, double recorrido, String color, String tipo_combustible, String vidrios, String transmision, double precio) {
-        this.id = id;
+    public Vehiculo( String placa, String tipo, String marca, String modelo, String tipo_de_motor, int año, double recorrido, String color, String tipo_combustible, String vidrios, String transmision, double precio) {
         this.placa = placa;
         this.tipo = tipo;
         this.marca = marca;
@@ -45,8 +55,7 @@ public class Vehiculo {
     }
     
     //METODO CONSTRUCTOR PARA CAMIONETAS
-    public Vehiculo(int id, String placa, String tipo , String marca, String modelo, String tipo_de_motor, int año, double recorrido, String color, String tipo_combustible, String vidrios, String transmision, String traccion, double precio) {
-        this.id = id;
+    public Vehiculo(String placa, String tipo , String marca, String modelo, String tipo_de_motor, int año, double recorrido, String color, String tipo_combustible, String vidrios, String transmision, String traccion, double precio) {
         this.placa = placa;
         this.tipo = tipo;
         this.marca = marca;
@@ -63,8 +72,7 @@ public class Vehiculo {
     }
     
     //METODO CONSTRUCTOR PARA MOTOS
-    public Vehiculo(int id, String placa, String tipo , String marca, String modelo, String tipo_de_motor, int año, double recorrido, String color, String tipo_combustible, double precio) {
-        this.id = id;
+    public Vehiculo( String placa, String tipo , String marca, String modelo, String tipo_de_motor, int año, double recorrido, String color, String tipo_combustible, double precio) {
         this.placa = placa;
         this.tipo = tipo;
         this.marca = marca;
@@ -75,14 +83,6 @@ public class Vehiculo {
         this.color = color;
         this.tipo_combustible = tipo_combustible;
         this.precio = precio;
-    }
-    
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
     
     public String getTipo() {
@@ -209,6 +209,58 @@ public class Vehiculo {
        return null;
    }
    
-   
-  
+   //Metodo para validar una cadena Numerica
+    public static boolean validarNumeros(String cadena) {
+        if (cadena.matches("[0-9]*")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public static void cargarArchivo(){
+        try (ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("Vehiculos.ser"));){
+            Vehiculo v=new Vehiculo("default","default","default","default","default",0,0,"default","default",0);
+            ArrayList<Vehiculo> vehiculos=new ArrayList<>();
+            vehiculos.add(v);
+            out.writeObject(vehiculos);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void RegistrarVehiculosFile(ArrayList<Vehiculo> vehiculos){
+        try(ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("Vehiculos.ser"));) {
+            out.writeObject(vehiculos);
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    public static ArrayList<Vehiculo> LeerVehiculosFile(){
+        try(ObjectInputStream ois=new ObjectInputStream(new FileInputStream("Vehiculos.ser"));) {
+            ArrayList<Vehiculo> vehiculos=(ArrayList<Vehiculo>)ois.readObject();
+            return vehiculos;
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    
+    //Verifica si la placa ingresada se encuentra en el sistema
+    //Si se encuentra True, sino False
+    public static boolean VerificarPlaca(Vehiculo v1, ArrayList<Vehiculo> vehiculos){
+        for (Vehiculo v2 : vehiculos){
+            if(v2.placa.equals(v1.placa))
+                return true;
+        }
+        return false;
+    }
+    
+    
 }
