@@ -10,6 +10,7 @@ import ec.edu.espol.model.Vendedor;
 import ec.edu.espol.proyectofinal.App;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -37,13 +38,15 @@ public class VistaVendedorController implements Initializable {
     private GridPane PanelVendedor;
     @FXML
     private HBox PanelBotones;
+    ArrayList<Vendedor>Lista_Vendedores=new ArrayList<>();
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        Vendedor.cargarArchivo();
+        this.Lista_Vendedores=Vendedor.LeerVendedorFile();
     }    
 
     @FXML
@@ -96,19 +99,13 @@ public class VistaVendedorController implements Initializable {
                 String Organizacion=tf3.getText();
                 String Clave=Persona.convertirSHA256(pw.getText());
                 Vendedor v=new Vendedor(Nombre,Apellido,Correo,Organizacion,Clave);
-                if(Persona.validarEmail(tf4.getText())==true){
-                    if(Vendedor.comprobarEstadoenLista(v)==false){
-                        Vendedor.RegistrarVendedorFile(v);
+                if(Persona.validarEmail(tf4.getText())==true && Vendedor.comprobarEstadoenLista(v,this.Lista_Vendedores)==false){
+                        this.Lista_Vendedores.add(v);
                         a=new Alert(AlertType.CONFIRMATION,"Usuario guardado con exito");
                         a.show();  
-                    }
-                    else{
-                        a=new Alert(AlertType.WARNING,"Correo ya resgistrado, ingrese otro");
-                        a.show();
-                    }
                 }
                 else{
-                    a=new Alert(AlertType.WARNING,"formato correo erroneo");
+                    a=new Alert(AlertType.WARNING,"formato correo erroneo/ correo ya registrado");
                     a.show();
                 }
             }
@@ -116,6 +113,7 @@ public class VistaVendedorController implements Initializable {
                a=new Alert(AlertType.WARNING,"No deben haber campos vacios"); 
                a.show();
             }
+            Vendedor.RegistrarVendedorFile(this.Lista_Vendedores);
         });
         
         
@@ -123,9 +121,12 @@ public class VistaVendedorController implements Initializable {
 
     @FXML
     private void IngresoUsuario(MouseEvent event) {
+        PanelVendedor.getChildren().clear();
+        
     }
 
     @FXML
     private void AceptarOferta(MouseEvent event) {
+        PanelVendedor.getChildren().clear();
     }
 }
