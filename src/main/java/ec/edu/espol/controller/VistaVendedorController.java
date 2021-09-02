@@ -45,7 +45,7 @@ public class VistaVendedorController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Vendedor.cargarArchivo();
+        //Vendedor.cargarArchivo();
         this.Lista_Vendedores=Vendedor.LeerVendedorFile();
     }    
 
@@ -87,7 +87,7 @@ public class VistaVendedorController implements Initializable {
         br.prefWidth(90);
         br.prefHeight(45);
         br.setAlignment(Pos.BOTTOM_RIGHT);
-        PanelBotones.getChildren().add(br);
+        PanelVendedor.add(br, 3, 2);
         br.setLayoutX(450);
         br.setLayoutY(30);
         br.setOnMouseClicked((MouseEvent e)->{
@@ -122,11 +122,60 @@ public class VistaVendedorController implements Initializable {
     @FXML
     private void IngresoUsuario(MouseEvent event) {
         PanelVendedor.getChildren().clear();
-        
+
     }
 
     @FXML
     private void AceptarOferta(MouseEvent event) {
         PanelVendedor.getChildren().clear();
+        Text t1=new Text("Correo: ");
+        Text t2=new Text("Contraseña: ");
+        TextField tfUser=new TextField();
+        PasswordField tfPsw=new PasswordField();
+        Button b=new Button("Ingresar");
+        PanelVendedor.add(t1,1,1);
+        PanelVendedor.add(t2,1,2);
+        PanelVendedor.add(tfUser,2,1);
+        PanelVendedor.add(tfPsw,2,2);
+        PanelVendedor.add(b,2,3);
+        String correo=tfUser.getText();
+        String contraseña=tfUser.getText();
+        StringBuilder sb=new StringBuilder();
+        for(Vendedor vv:this.Lista_Vendedores){
+            sb.append(vv.toString());
+            sb.append("\n");
+            sb.append(vv.getClave());
+            sb.append("\n");
+        }
+        Text tinfo=new Text(sb.toString());
+        PanelVendedor.add(tinfo,0,4);
+        
+        b.setOnMouseClicked((MouseEvent me)->{
+            
+            Alert a;
+            if(!(tfUser.getText().isEmpty() || tfPsw.getText().isEmpty())){
+                boolean cond=false;
+                for(Vendedor v:this.Lista_Vendedores){
+                    if(correo.contains(v.getCorreo())){
+                        cond=true;
+                    }
+                }
+                if(cond==true){
+                    a=new Alert(AlertType.WARNING,"Usuario esta en lista");
+                    a.show();
+                }
+                else{
+                    a=new Alert(AlertType.ERROR,"Usuario NO esta en lista");
+                    a.show();
+                }
+            }
+            else{
+                a=new Alert(AlertType.WARNING,"Campos en blanco");
+                a.show();
+            }
+
+        });
+            
+        
     }
 }
