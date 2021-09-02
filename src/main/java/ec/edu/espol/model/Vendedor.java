@@ -7,11 +7,13 @@ package ec.edu.espol.model;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.security.MessageDigest;
@@ -23,15 +25,23 @@ import java.util.ArrayList;
  * @author Dell
  */
 public class Vendedor extends Persona implements Serializable{
-    
+    ArrayList<Vendedor>vendedores=new ArrayList<>();
     public Vendedor(String nombres, String apellidos, String correo, String organizacion, String clave) {
         super(nombres, apellidos, correo, organizacion, clave);
     }
-    
-    public static void RegistrarVendedorFile(Vendedor v){
-        try(BufferedWriter bw=new BufferedWriter(new FileWriter("Vendedores.txt",true));) {
-            bw.write(v.nombres+"|"+v.apellidos+"|"+v.correo+"|"+v.organizacion+"|"+v.clave);
-            bw.newLine();
+    public static void cargarArchivo(){
+        try (ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream("Vendedores.txt"));){
+            Vendedor v=new Vendedor("default","default","default","default","default");
+            ArrayList<Vendedor>vendedores=new ArrayList<>();
+            vendedores.add(v);
+            oos.writeObject(vendedores);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    public static void RegistrarVendedorFile(ArrayList<Vendedor>vendedores){
+        try(ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream("Vendedores.txt"));) {
+            oos.writeObject(vendedores);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
@@ -39,39 +49,29 @@ public class Vendedor extends Persona implements Serializable{
         }
     }
         public static ArrayList<Vendedor> LeerVendedorFile(){
-        try(BufferedReader br=new BufferedReader(new FileReader("Vendedores.txt"));) {
-            ArrayList<Vendedor>vendedores=new ArrayList<>();
-            String line;
-            while((line=br.readLine())!=null){
-                String[]lista=line.split("|");
-                String nombre=lista[0];
-                String apellido=lista[1];
-                String correo=lista[2];
-                String organizacion=lista[3];
-                String clave=lista[4];
-                Vendedor v=new Vendedor(nombre,apellido,correo,organizacion,clave);
-                vendedores.add(v);
-            }
+        try(ObjectInputStream ois=new ObjectInputStream(new FileInputStream("Vendedores.txt"));) {
+            ArrayList<Vendedor>vendedores=(ArrayList<Vendedor>)ois.readObject();
             return vendedores;
-        }
-        catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
         return null;
     }
-        public static boolean comprobarEstadoenLista(Vendedor v){
-            if(Vendedor.LeerVendedorFile()!=null){
-                ArrayList<Vendedor>vendedores=Vendedor.LeerVendedorFile();
-                for(Vendedor ve:vendedores){
-                if(ve.equals(v))
+        public static boolean comprobarEstadoenLista(Vendedor v,ArrayList<Vendedor>vendedores){
+            for(Vendedor ve:vendedores){
+                if(v.equals(ve)){
                     return true;
                 } 
             }
+            
             return false;
         }
-    public boolean Equals(Object o){
+    @Override
+    public boolean equals(Object o){
         if(o==null)
             return false;
         if(o==this)
