@@ -34,7 +34,7 @@ public class Comprador extends Persona implements Serializable{
         }
     }
     public static void RegistrarCompradorFile(ArrayList<Comprador>compradores){
-        try(ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("Compradores.txt",true));) {
+        try(ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("Compradores.txt"));) {
             out.writeObject(compradores);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
@@ -43,7 +43,7 @@ public class Comprador extends Persona implements Serializable{
         }
     }
     public static ArrayList<Comprador> LeerCompradorInFile(){
-        try (ObjectInputStream ois=new ObjectInputStream(new FileInputStream("Compradores.dat"));){
+        try (ObjectInputStream ois=new ObjectInputStream(new FileInputStream("Compradores.txt"));){
             ArrayList<Comprador>compradores=(ArrayList<Comprador>)ois.readObject();
             return compradores;
         } catch (FileNotFoundException ex) {
