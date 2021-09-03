@@ -122,7 +122,13 @@ public class VistaVendedorController implements Initializable {
     @FXML
     private void IngresoUsuario(MouseEvent event) {
         PanelVendedor.getChildren().clear();
-
+        try {
+            FXMLLoader fxmloader=App.LoadFXMLLoader("VistaVehiculo");
+            App.setRoot(fxmloader);
+            //VistaVehiculoController vv=fxmloader.getController();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @FXML
@@ -162,10 +168,15 @@ public class VistaVendedorController implements Initializable {
                     }
                 }
                 if(cond==true){
-                    a=new Alert(AlertType.WARNING,"Bienvenido "+ correo);
+                    a=new Alert(AlertType.CONFIRMATION,"Bienvenido "+ correo);
                     a.show();
-                    PanelVendedor.getChildren().clear();
-                    
+                    try {
+                        FXMLLoader fxmloader=App.LoadFXMLLoader("VistaOfertas");
+                        App.setRoot(fxmloader);
+                        VistaOfertasController voc=fxmloader.getController();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } 
                 }
                 else{
                     a=new Alert(AlertType.ERROR,"El correo no se encuentra registrado o introdujo datos erroneos");
