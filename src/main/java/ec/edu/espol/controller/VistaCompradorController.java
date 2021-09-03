@@ -10,12 +10,14 @@ import ec.edu.espol.model.Persona;
 import ec.edu.espol.proyectofinal.App;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -32,6 +34,8 @@ public class VistaCompradorController implements Initializable {
 
     @FXML
     private GridPane PanelComprador;
+    ArrayList<Comprador> Lista_Compradores = new ArrayList<>();
+
 
 
     /**
@@ -40,6 +44,7 @@ public class VistaCompradorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        this.Lista_Compradores=Comprador.LeerCompradorInFile();
     }    
 
     @FXML
@@ -81,29 +86,32 @@ public class VistaCompradorController implements Initializable {
         br.prefHeight(45);
         br.setAlignment(Pos.CENTER_RIGHT);
         PanelComprador.add(br, 5, 2);
+        br.setLayoutX(450);
+        br.setLayoutY(30);
         br.setOnMouseClicked((MouseEvent e)->{
             Alert a;
-            if(tf1.getText()!=null && tf2.getText()!=null && tf3.getText()!=null && tf4.getText()!=null && pw.getText()!=null){
+            if(!(tf1.getText().isEmpty() || tf2.getText().isEmpty() || tf3.getText().isEmpty() || tf4.getText().isEmpty() || pw.getText().isEmpty())){
                 String Nombre=tf1.getText();
                 String Apellido=tf2.getText();
                 String Correo=tf4.getText();
                 String Organizacion=tf3.getText();
                 String Clave=Persona.convertirSHA256(pw.getText());
-                if(Persona.validarEmail(tf4.getText())!=false){
-                    Comprador c=new Comprador(Nombre,Apellido,Organizacion,Correo,Clave);
-                    //METODO REGISTRAR COMPRADOR HACERRRRRRRRRR
-                    a=new Alert(Alert.AlertType.CONFIRMATION,"Usuario guardado con exito");
-                    a.show();
+                Comprador c = new Comprador(Nombre,Apellido,Correo,Organizacion,Clave);
+                if(Persona.validarEmail(tf4.getText())==true && Comprador.comprobarEstadoenLista(c,this.Lista_Compradores)==false){
+                        this.Lista_Compradores.add(c);
+                        a=new Alert(AlertType.CONFIRMATION,"Usuario guardado con exito");
+                        a.show();  
                 }
                 else{
-                    a=new Alert(Alert.AlertType.WARNING,"Espacios en Blanco o correo invalido");
+                    a=new Alert(AlertType.WARNING,"formato correo erroneo/ correo ya registrado");
                     a.show();
                 }
             }
             else{
-               a=new Alert(Alert.AlertType.WARNING,"No deben haber campos vacios"); 
+               a=new Alert(AlertType.WARNING,"No deben haber campos vacios"); 
                a.show();
             }
+            Comprador.RegistrarCompradorFile(this.Lista_Compradores);
         });
         
     }
