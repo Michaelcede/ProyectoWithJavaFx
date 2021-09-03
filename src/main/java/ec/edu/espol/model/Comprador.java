@@ -11,42 +11,36 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author alecs
  */
-public class Comprador extends Persona{
+public class Comprador extends Persona implements Serializable{
     
     public Comprador(String nombres, String apellidos, String correo, String organizacion, String clave) {
         super(nombres, apellidos, correo, organizacion, clave);
     }
-    
+    public static void cargarArchivo(){
+        try (ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream("Compradores.txt"));){
+            Comprador c = new Comprador("default","default","default","default","default");
+            ArrayList<Comprador> compradores = new ArrayList<>();
+            compradores.add(c);
+            oos.writeObject(compradores);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
     public static void RegistrarCompradorFile(ArrayList<Comprador>compradores){
-        try(ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("Compradores.dat",true));) {
+        try(ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("Compradores.txt",true));) {
             out.writeObject(compradores);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
-    public static boolean ComprobarCompradorInFile(Comprador co){
-        try (ObjectInputStream ois=new ObjectInputStream(new FileInputStream("Compradores.dat"));){
-            ArrayList<Comprador>compradores=(ArrayList<Comprador>)ois.readObject();
-            for(Comprador c:compradores){
-                if(co.equals(c))
-                    return true;
-            }
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        return false;
     }
     public static ArrayList<Comprador> LeerCompradorInFile(){
         try (ObjectInputStream ois=new ObjectInputStream(new FileInputStream("Compradores.dat"));){
@@ -61,7 +55,15 @@ public class Comprador extends Persona{
         }
         return null;
     }
-    public boolean Equals(Object o){
+    public static boolean comprobarEstadoenLista(Comprador c,ArrayList<Comprador>compradores){
+        for(Comprador co: compradores){
+            if(c.equals(co)){
+                return true;
+            } 
+        } 
+        return false;
+    }
+    public boolean equals(Object o){
         if(o==null)
             return false;
         if(o==this)
@@ -70,5 +72,9 @@ public class Comprador extends Persona{
             return false;
         Comprador c=(Comprador)o;
         return this.correo.equals(c.correo);
+    }
+    @Override
+    public String toString(){
+        return "Nombre: "+this.nombres+" Apellido: "+this.apellidos+" Correo: "+this.correo+" Organizacion: "+this.organizacion+" Contraseña: "+this.clave;
     }
 }
