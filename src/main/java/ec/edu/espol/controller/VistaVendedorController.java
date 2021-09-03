@@ -121,13 +121,8 @@ public class VistaVendedorController implements Initializable {
 
     @FXML
     private void IngresoUsuario(MouseEvent event) {
-        try {
-            FXMLLoader fxmloader=App.LoadFXMLLoader("VistaVehiculo");
-            App.setRoot(fxmloader);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } 
-        
+        PanelVendedor.getChildren().clear();
+
     }
 
     @FXML
@@ -143,39 +138,42 @@ public class VistaVendedorController implements Initializable {
         PanelVendedor.add(tfUser,2,1);
         PanelVendedor.add(tfPsw,2,2);
         PanelVendedor.add(b,2,3);
-        String correo=tfUser.getText();
-        String contraseña=tfUser.getText();
+        //-------------------------
         StringBuilder sb=new StringBuilder();
-        for(Vendedor vv:this.Lista_Vendedores){
-            sb.append(vv.toString());
-            sb.append("\n");
-            sb.append(vv.getClave());
+        for(Vendedor v:this.Lista_Vendedores){
+            sb.append(v.getCorreo());
+            sb.append("---------");
+            sb.append(v.getClave());
             sb.append("\n");
         }
-        Text tinfo=new Text(sb.toString());
-        PanelVendedor.add(tinfo,0,4);
-        
+        Text tt=new Text(sb.toString());
+        PanelVendedor.add(tt,0,4);
+        //--------------------------
         b.setOnMouseClicked((MouseEvent me)->{
-            
+            String correo=tfUser.getText();
+            String contraseña_sinHash=tfPsw.getText();
+            String contraseña=Persona.convertirSHA256(contraseña_sinHash);
             Alert a;
             if(!(tfUser.getText().isEmpty() || tfPsw.getText().isEmpty())){
                 boolean cond=false;
                 for(Vendedor v:this.Lista_Vendedores){
-                    if(correo.contains(v.getCorreo())){
+                    if(correo.contains(v.getCorreo()) && contraseña.contains(v.getClave())){
                         cond=true;
                     }
                 }
                 if(cond==true){
-                    a=new Alert(AlertType.WARNING,"Usuario esta en lista");
+                    a=new Alert(AlertType.WARNING,"Bienvenido "+ correo);
                     a.show();
+                    PanelVendedor.getChildren().clear();
+                    
                 }
                 else{
-                    a=new Alert(AlertType.ERROR,"Usuario NO esta en lista");
+                    a=new Alert(AlertType.ERROR,"El correo no se encuentra registrado o introdujo datos erroneos");
                     a.show();
                 }
             }
             else{
-                a=new Alert(AlertType.WARNING,"Campos en blanco");
+                a=new Alert(AlertType.WARNING,"Existen campos en blanco");
                 a.show();
             }
 
