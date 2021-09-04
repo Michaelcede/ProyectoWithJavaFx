@@ -5,7 +5,9 @@
  */
 package ec.edu.espol.controller;
 
+import ec.edu.espol.model.Persona;
 import ec.edu.espol.model.Vehiculo;
+import ec.edu.espol.model.Vendedor;
 import ec.edu.espol.proyectofinal.App;
 import java.io.IOException;
 import java.net.URL;
@@ -22,11 +24,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import java.lang.NumberFormatException;
 import java.util.ArrayList;
 
 /**
@@ -68,14 +68,17 @@ public class VistaVehiculoController implements Initializable {
     private TextField tf12;
     
     ArrayList<Vehiculo> ListaVehiculos=new ArrayList<>();
+    ArrayList<Vendedor> ListaVendedores=new ArrayList<>();
+
     @FXML
     private GridPane PanelBotones;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        //Vehiculo.cargarArchivo();
+        Vehiculo.cargarArchivo();
         this.ListaVehiculos = Vehiculo.LeerVehiculosFile();
+        this.ListaVendedores=Vendedor.LeerVendedorFile();
     }   
     
     @FXML
@@ -90,170 +93,196 @@ public class VistaVehiculoController implements Initializable {
     
     @FXML
     private void IngresarUsuario(MouseEvent event) {
-        HBoxIngreso.getChildren().clear();
-        cambiar = new Button("CAMBIAR VEHICULO");
-        cambiar.setMinSize(90.00, 45.00);
-        cambiar.setTranslateX(30);
-        cambiar.setTranslateY(-20);
-        cambiar.addEventFilter(MouseEvent.MOUSE_CLICKED, eventoCambiar);
-        PanelBotones.add(cambiar, 2, 0);
-        ingresarVehiculo = new Button("INGRESAR VEHICULO");
-        ingresarVehiculo.setMinSize(90.00, 45.00);
-        ingresarVehiculo.setTranslateX(30);
-        ingresarVehiculo.setTranslateY(-20);
-        ingresarVehiculo.addEventFilter(MouseEvent.MOUSE_CLICKED, eventoIngresar);
-        PanelBotones.add(ingresarVehiculo, 1, 0);
-        Text t0= new Text ("Ingrese el tipo de Vehiculo:");
-        PanelVehiculos.add(t0,0,0);
-        tf0=new TextField();
-        PanelVehiculos.add(tf0, 1, 0);
-        tf0.setOnKeyPressed((KeyEvent e)->{
-                if((e.getCode() == KeyCode.ENTER)){
-                    if(tf0.getText().toLowerCase().equals("auto")){
-                        PanelVehiculos.getChildren().clear();
-                        Text t1=new Text("Placa:");
-                        PanelVehiculos.add(t1, 0, 1);
-                        tf1=new TextField();
-                        PanelVehiculos.add(tf1, 1, 1);
-                        Text t2=new Text("Marca:");
-                        PanelVehiculos.add(t2, 0, 2);
-                        tf2=new TextField();
-                        PanelVehiculos.add(tf2, 1, 2);
-                        Text t3=new Text("Modelo:");
-                        PanelVehiculos.add(t3, 0, 3);
-                        tf3=new TextField();
-                        PanelVehiculos.add(tf3, 1, 3);
-                        Text t4=new Text("Tipo de Motor:");
-                        PanelVehiculos.add(t4, 0, 4);
-                        tf4=new TextField();
-                        PanelVehiculos.add(tf4, 1, 4);
-                        Text t5=new Text("Año:");
-                        PanelVehiculos.add(t5, 0, 5);
-                        tf5=new TextField();
-                        PanelVehiculos.add(tf5, 1, 5);
-                        Text t6=new Text("Recorrido:");
-                        PanelVehiculos.add(t6, 0, 6);
-                        tf6=new TextField();
-                        PanelVehiculos.add(tf6, 1, 6);
-                        Text t7=new Text("Color:");
-                        PanelVehiculos.add(t7, 0, 7);
-                        tf7=new TextField();
-                        PanelVehiculos.add(tf7, 1, 7);
-                        Text t8=new Text("Tipo de Combustible:");
-                        PanelVehiculos.add(t8, 0, 8);
-                        tf8=new TextField();
-                        PanelVehiculos.add(tf8, 1, 8);
-                        Text t9=new Text("Precio:");
-                        PanelVehiculos.add(t9, 0, 9);
-                        tf9=new TextField();
-                        PanelVehiculos.add(tf9, 1, 9);
-                        Text t10=new Text("Vidrios:");
-                        PanelVehiculos.add(t10, 0, 10);
-                        tf10=new TextField();
-                        PanelVehiculos.add(tf10, 1, 10);
-                        Text t11=new Text("Transmision:");
-                        PanelVehiculos.add(t11, 0, 11);
-                        tf11=new TextField();
-                        PanelVehiculos.add(tf11, 1, 11);
-                        
-                    }
-                    else if(tf0.getText().toLowerCase().equals("camioneta")){
-                        PanelVehiculos.getChildren().clear();
-                        Text t1=new Text("Placa:");
-                        PanelVehiculos.add(t1, 0, 1);
-                        tf1=new TextField();
-                        PanelVehiculos.add(tf1, 1, 1);
-                        Text t2=new Text("Marca:");
-                        PanelVehiculos.add(t2, 0, 2);
-                        tf2=new TextField();
-                        PanelVehiculos.add(tf2, 1, 2);
-                        Text t3=new Text("Modelo:");
-                        PanelVehiculos.add(t3, 0, 3);
-                        tf3=new TextField();
-                        PanelVehiculos.add(tf3, 1, 3);
-                        Text t4=new Text("Tipo de Motor:");
-                        PanelVehiculos.add(t4, 0, 4);
-                        tf4=new TextField();
-                        PanelVehiculos.add(tf4, 1, 4);
-                        Text t5=new Text("Año:");
-                        PanelVehiculos.add(t5, 0, 5);
-                        tf5=new TextField();
-                        PanelVehiculos.add(tf5, 1, 5);
-                        Text t6=new Text("Recorrido:");
-                        PanelVehiculos.add(t6, 0, 6);
-                        tf6=new TextField();
-                        PanelVehiculos.add(tf6, 1, 6);
-                        Text t7=new Text("Color:");
-                        PanelVehiculos.add(t7, 0, 7);
-                        tf7=new TextField();
-                        PanelVehiculos.add(tf7, 1, 7);
-                        Text t8=new Text("Tipo de Combustible:");
-                        PanelVehiculos.add(t8, 0, 8);
-                        tf8=new TextField();
-                        PanelVehiculos.add(tf8, 1, 8);
-                        Text t9=new Text("Precio:");
-                        PanelVehiculos.add(t9, 0, 9);
-                        tf9=new TextField();
-                        PanelVehiculos.add(tf9, 1, 9);
-                        Text t10=new Text("Vidrios:");
-                        PanelVehiculos.add(t10, 0, 10);
-                        tf10=new TextField();
-                        PanelVehiculos.add(tf10, 1, 10);
-                        Text t11=new Text("Transmision:");
-                        PanelVehiculos.add(t11, 0, 11);
-                        tf11=new TextField();
-                        PanelVehiculos.add(tf11, 1, 11);
-                        Text t12=new Text("Traccion:");
-                        PanelVehiculos.add(t12, 0, 12);
-                        tf12=new TextField();
-                        PanelVehiculos.add(tf12, 1, 12);
-                    }
-                    else if(tf0.getText().toLowerCase().equals("moto")){
-                        PanelVehiculos.getChildren().clear();
-                        Text t1=new Text("Placa:");
-                        PanelVehiculos.add(t1, 0, 1);
-                        tf1=new TextField();
-                        PanelVehiculos.add(tf1, 1, 1);
-                        Text t2=new Text("Marca:");
-                        PanelVehiculos.add(t2, 0, 2);
-                        tf2=new TextField();
-                        PanelVehiculos.add(tf2, 1, 2);
-                        Text t3=new Text("Modelo:");
-                        PanelVehiculos.add(t3, 0, 3);
-                        tf3=new TextField();
-                        PanelVehiculos.add(tf3, 1, 3);
-                        Text t4=new Text("Tipo de Motor:");
-                        PanelVehiculos.add(t4, 0, 4);
-                        tf4=new TextField();
-                        PanelVehiculos.add(tf4, 1, 4);
-                        Text t5=new Text("Año:");
-                        PanelVehiculos.add(t5, 0, 5);
-                        tf5=new TextField();
-                        PanelVehiculos.add(tf5, 1, 5);
-                        Text t6=new Text("Recorrido:");
-                        PanelVehiculos.add(t6, 0, 6);
-                        tf6=new TextField();
-                        PanelVehiculos.add(tf6, 1, 6);
-                        Text t7=new Text("Color:");
-                        PanelVehiculos.add(t7, 0, 7);
-                        tf7=new TextField();
-                        PanelVehiculos.add(tf7, 1, 7);
-                        Text t8=new Text("Tipo de Combustible:");
-                        PanelVehiculos.add(t8, 0, 8);
-                        tf8=new TextField();
-                        PanelVehiculos.add(tf8, 1, 8);
-                        Text t9=new Text("Precio:");
-                        PanelVehiculos.add(t9, 0, 9);
-                        tf9=new TextField();
-                        PanelVehiculos.add(tf9, 1, 9);
-                    }
-                    else if(tf0.getText().equals("") || tf0.getText().toLowerCase().equals("moto")==false || tf0.getText().toLowerCase().equals("auto")==false || tf0.getText().toLowerCase().equals("camioneta")==false){
-                        Alert alert = new Alert(AlertType.WARNING,"Especifique el Tipo de Vehiculo");
-                        alert.show();
-                    }
+        if(!(txtUsuario.getText().isEmpty() || pwContraseña.getText().isEmpty())){
+            String correo = txtUsuario.getText();
+            String contraseña = Persona.convertirSHA256(pwContraseña.getText());
+            Alert a;
+            boolean cond=false;
+            for(Vendedor v:this.ListaVendedores){
+                if(correo.contains(v.getCorreo()) && contraseña.contains(v.getClave())){
+                    cond=true;
                 }
+            }
+            if(cond==true){
+                HBoxIngreso.getChildren().clear();
+                cambiar = new Button("CAMBIAR VEHICULO");
+                cambiar.setMinSize(90.00, 45.00);
+                cambiar.setTranslateX(30);
+                cambiar.setTranslateY(-20);
+                cambiar.addEventFilter(MouseEvent.MOUSE_CLICKED, eventoCambiar);
+                PanelBotones.add(cambiar, 2, 0);
+                ingresarVehiculo = new Button("INGRESAR VEHICULO");
+                ingresarVehiculo.setMinSize(90.00, 45.00);
+                ingresarVehiculo.setTranslateX(30);
+                ingresarVehiculo.setTranslateY(-20);
+                ingresarVehiculo.addEventFilter(MouseEvent.MOUSE_CLICKED, eventoIngresar);
+                PanelBotones.add(ingresarVehiculo, 1, 0);
+                Text t0= new Text ("Ingrese el tipo de Vehiculo:");
+                PanelVehiculos.add(t0,0,0);
+                tf0=new TextField();
+                PanelVehiculos.add(tf0, 1, 0);
+                tf0.setOnKeyPressed((KeyEvent e)->{
+                        if((e.getCode() == KeyCode.ENTER)){
+                            if(tf0.getText().toLowerCase().equals("auto")){
+                                PanelVehiculos.getChildren().clear();
+                                Text t1=new Text("Placa:");
+                                PanelVehiculos.add(t1, 0, 1);
+                                tf1=new TextField();
+                                PanelVehiculos.add(tf1, 1, 1);
+                                Text t2=new Text("Marca:");
+                                PanelVehiculos.add(t2, 0, 2);
+                                tf2=new TextField();
+                                PanelVehiculos.add(tf2, 1, 2);
+                                Text t3=new Text("Modelo:");
+                                PanelVehiculos.add(t3, 0, 3);
+                                tf3=new TextField();
+                                PanelVehiculos.add(tf3, 1, 3);
+                                Text t4=new Text("Tipo de Motor:");
+                                PanelVehiculos.add(t4, 0, 4);
+                                tf4=new TextField();
+                                PanelVehiculos.add(tf4, 1, 4);
+                                Text t5=new Text("Año:");
+                                PanelVehiculos.add(t5, 0, 5);
+                                tf5=new TextField();
+                                PanelVehiculos.add(tf5, 1, 5);
+                                Text t6=new Text("Recorrido:");
+                                PanelVehiculos.add(t6, 0, 6);
+                                tf6=new TextField();
+                                PanelVehiculos.add(tf6, 1, 6);
+                                Text t7=new Text("Color:");
+                                PanelVehiculos.add(t7, 0, 7);
+                                tf7=new TextField();
+                                PanelVehiculos.add(tf7, 1, 7);
+                                Text t8=new Text("Tipo de Combustible:");
+                                PanelVehiculos.add(t8, 0, 8);
+                                tf8=new TextField();
+                                PanelVehiculos.add(tf8, 1, 8);
+                                Text t9=new Text("Precio:");
+                                PanelVehiculos.add(t9, 0, 9);
+                                tf9=new TextField();
+                                PanelVehiculos.add(tf9, 1, 9);
+                                Text t10=new Text("Vidrios:");
+                                PanelVehiculos.add(t10, 0, 10);
+                                tf10=new TextField();
+                                PanelVehiculos.add(tf10, 1, 10);
+                                Text t11=new Text("Transmision:");
+                                PanelVehiculos.add(t11, 0, 11);
+                                tf11=new TextField();
+                                PanelVehiculos.add(tf11, 1, 11);
+
+                            }
+                            else if(tf0.getText().toLowerCase().equals("camioneta")){
+                                PanelVehiculos.getChildren().clear();
+                                Text t1=new Text("Placa:");
+                                PanelVehiculos.add(t1, 0, 1);
+                                tf1=new TextField();
+                                PanelVehiculos.add(tf1, 1, 1);
+                                Text t2=new Text("Marca:");
+                                PanelVehiculos.add(t2, 0, 2);
+                                tf2=new TextField();
+                                PanelVehiculos.add(tf2, 1, 2);
+                                Text t3=new Text("Modelo:");
+                                PanelVehiculos.add(t3, 0, 3);
+                                tf3=new TextField();
+                                PanelVehiculos.add(tf3, 1, 3);
+                                Text t4=new Text("Tipo de Motor:");
+                                PanelVehiculos.add(t4, 0, 4);
+                                tf4=new TextField();
+                                PanelVehiculos.add(tf4, 1, 4);
+                                Text t5=new Text("Año:");
+                                PanelVehiculos.add(t5, 0, 5);
+                                tf5=new TextField();
+                                PanelVehiculos.add(tf5, 1, 5);
+                                Text t6=new Text("Recorrido:");
+                                PanelVehiculos.add(t6, 0, 6);
+                                tf6=new TextField();
+                                PanelVehiculos.add(tf6, 1, 6);
+                                Text t7=new Text("Color:");
+                                PanelVehiculos.add(t7, 0, 7);
+                                tf7=new TextField();
+                                PanelVehiculos.add(tf7, 1, 7);
+                                Text t8=new Text("Tipo de Combustible:");
+                                PanelVehiculos.add(t8, 0, 8);
+                                tf8=new TextField();
+                                PanelVehiculos.add(tf8, 1, 8);
+                                Text t9=new Text("Precio:");
+                                PanelVehiculos.add(t9, 0, 9);
+                                tf9=new TextField();
+                                PanelVehiculos.add(tf9, 1, 9);
+                                Text t10=new Text("Vidrios:");
+                                PanelVehiculos.add(t10, 0, 10);
+                                tf10=new TextField();
+                                PanelVehiculos.add(tf10, 1, 10);
+                                Text t11=new Text("Transmision:");
+                                PanelVehiculos.add(t11, 0, 11);
+                                tf11=new TextField();
+                                PanelVehiculos.add(tf11, 1, 11);
+                                Text t12=new Text("Traccion:");
+                                PanelVehiculos.add(t12, 0, 12);
+                                tf12=new TextField();
+                                PanelVehiculos.add(tf12, 1, 12);
+                            }
+                            else if(tf0.getText().toLowerCase().equals("moto")){
+                                PanelVehiculos.getChildren().clear();
+                                Text t1=new Text("Placa:");
+                                PanelVehiculos.add(t1, 0, 1);
+                                tf1=new TextField();
+                                PanelVehiculos.add(tf1, 1, 1);
+                                Text t2=new Text("Marca:");
+                                PanelVehiculos.add(t2, 0, 2);
+                                tf2=new TextField();
+                                PanelVehiculos.add(tf2, 1, 2);
+                                Text t3=new Text("Modelo:");
+                                PanelVehiculos.add(t3, 0, 3);
+                                tf3=new TextField();
+                                PanelVehiculos.add(tf3, 1, 3);
+                                Text t4=new Text("Tipo de Motor:");
+                                PanelVehiculos.add(t4, 0, 4);
+                                tf4=new TextField();
+                                PanelVehiculos.add(tf4, 1, 4);
+                                Text t5=new Text("Año:");
+                                PanelVehiculos.add(t5, 0, 5);
+                                tf5=new TextField();
+                                PanelVehiculos.add(tf5, 1, 5);
+                                Text t6=new Text("Recorrido:");
+                                PanelVehiculos.add(t6, 0, 6);
+                                tf6=new TextField();
+                                PanelVehiculos.add(tf6, 1, 6);
+                                Text t7=new Text("Color:");
+                                PanelVehiculos.add(t7, 0, 7);
+                                tf7=new TextField();
+                                PanelVehiculos.add(tf7, 1, 7);
+                                Text t8=new Text("Tipo de Combustible:");
+                                PanelVehiculos.add(t8, 0, 8);
+                                tf8=new TextField();
+                                PanelVehiculos.add(tf8, 1, 8);
+                                Text t9=new Text("Precio:");
+                                PanelVehiculos.add(t9, 0, 9);
+                                tf9=new TextField();
+                                PanelVehiculos.add(tf9, 1, 9);
+                            }
+                            else if(tf0.getText().equals("") || tf0.getText().toLowerCase().equals("moto")==false || tf0.getText().toLowerCase().equals("auto")==false || tf0.getText().toLowerCase().equals("camioneta")==false){
+                                Alert alert = new Alert(AlertType.WARNING,"Especifique el Tipo de Vehiculo");
+                                alert.show();
+                            }
+                        }
                 }
                 );
+            }
+            else{
+                a=new Alert(AlertType.ERROR,"El correo no se encuentra registrado o introdujo datos erroneos");
+                a.show();
+            }
+        }else{
+            Alert c = new Alert(AlertType.WARNING,"No deben haber campos vacios");
+            c.show();
+        }
+        
+
+        
+            
+   
+
     }
     
     //Creacion del evento(Darle Click) para el boton Cambiar
@@ -543,6 +572,5 @@ public class VistaVehiculoController implements Initializable {
             }       
         }       
     };
-    
-
+      
 }
