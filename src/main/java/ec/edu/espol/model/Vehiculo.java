@@ -34,8 +34,6 @@ public class Vehiculo implements Serializable {
     private String transmision; //no aplica para motos
     private String traccion; //aplica para camionetas
     private double precio;
-    
-    private static final long serialVersionUID = 8799656478674716638L;
     ArrayList<Vehiculo> vehiculos =new ArrayList<>();
     
     //METODO CONSTRUCTOR PARA AUTOS
@@ -196,15 +194,15 @@ public class Vehiculo implements Serializable {
    public String toString(){
        // Para Auto: (String placa, String tipo, String marca, String modelo, String tipo_de_motor, int año, double recorrido, String color, String tipo_combustible, String vidrios, String transmision, double precio) 
        if (this.tipo.toLowerCase().equals("auto"))
-           return placa + "|" + tipo + "|" + marca + "|" + modelo + "|" + tipo_de_motor + "|" + año + "|" + recorrido + "|" + color + "|" + tipo_combustible + "|" + vidrios + "|" + transmision + "|" + precio;
+           return "Placa: "+placa + " Tipo: " + tipo + " Marca: " + marca + " Modelo: " + modelo + " Tipo de motor: " + tipo_de_motor + " Año: " + año + " Recorrido: " + recorrido + " Color: " + color + " Tipo de combustible: " + tipo_combustible + " Tipo de vidrios: " + vidrios + " Tipo de transmision: " + transmision + " Precio" + precio;
        
        // Para Camioneta: (String placa, String tipo , String marca, String modelo, String tipo_de_motor, int año, double recorrido, String color, String tipo_combustible, String vidrios, String transmision, String traccion, double precio) 
        if (this.tipo.toLowerCase().equals("camioneta"))
-           return placa + "|" + tipo + "|" + marca + "|" + modelo + "|" + tipo_de_motor + "|" + año + "|" + recorrido + "|" + color + "|" + tipo_combustible + "|" + vidrios + "|" + transmision + "|" + traccion + "|" + precio;
+           return "Placa: "+placa + " Tipo: " + tipo + " Marca: " + marca + " Modelo: " + modelo + " Tipo de motor: " + tipo_de_motor + " Año: " + año + " Recorrido: " + recorrido + " Color: " +  color + " Tipo de combustible: " + tipo_combustible  + " Tipo de vidrios: " + vidrios + " Tipo de transmision: " + transmision + " Traccion: " + traccion + " Precio" +precio;
        
        // Para Moto: (String placa, String tipo , String marca, String modelo, String tipo_de_motor, int año, double recorrido, String color, String tipo_combustible, double precio)
        if (this.tipo.toLowerCase().equals("moto"))
-           return placa + "|" + tipo + "|" + marca + "|" + modelo + "|" + tipo_de_motor + "|" + año + "|" + recorrido + "|" + color + "|" + tipo_combustible + "|" + precio;
+           return "Placa: "+placa + " Tipo: "+ tipo + " Marca: " + marca + " Modelo: " + modelo + " Tipo de motor: " +  tipo_de_motor + " Año: " + año+ " Recorrido: " + recorrido + " Color: " +  color + " Tipo de combustible: " + tipo_combustible+ " Precio" + precio;
        
        return null;
    }
@@ -219,7 +217,7 @@ public class Vehiculo implements Serializable {
     }
     
     public static void cargarArchivo(){
-        try (ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("Vehiculos.ser"));){
+        try (ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("Vehiculos.txt"));){
             Vehiculo v=new Vehiculo("default","default","default","default","default",0,0,"default","default",0);
             ArrayList<Vehiculo> vehiculos=new ArrayList<>();
             vehiculos.add(v);
@@ -230,7 +228,7 @@ public class Vehiculo implements Serializable {
     }
 
     public static void RegistrarVehiculosFile(ArrayList<Vehiculo> vehiculos){
-        try(ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("Vehiculos.ser"));) {
+        try(ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("Vehiculos.txt"));) {
             out.writeObject(vehiculos);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
@@ -239,7 +237,7 @@ public class Vehiculo implements Serializable {
         }
     }
     public static ArrayList<Vehiculo> LeerVehiculosFile(){
-        try(ObjectInputStream ois=new ObjectInputStream(new FileInputStream("Vehiculos.ser"));) {
+        try(ObjectInputStream ois=new ObjectInputStream(new FileInputStream("Vehiculos.txt"));) {
             ArrayList<Vehiculo> vehiculos=(ArrayList<Vehiculo>)ois.readObject();
             return vehiculos;
         } catch (FileNotFoundException ex) {
