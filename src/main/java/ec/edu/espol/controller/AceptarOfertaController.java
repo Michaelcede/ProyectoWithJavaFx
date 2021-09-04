@@ -5,14 +5,16 @@
  */
 package ec.edu.espol.controller;
 
+import ec.edu.espol.model.Comprador;
 import ec.edu.espol.proyectofinal.App;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -20,45 +22,36 @@ import javafx.scene.input.MouseEvent;
  *
  * @author Dell
  */
-public class PrincipalController implements Initializable {
+public class AceptarOfertaController extends VistaOfertarCompradorController implements Initializable {
 
     @FXML
-    private Button botonVendedor;
-
+    private TextField TextoMonto;
+    ArrayList<Comprador>compradores=new ArrayList<>();
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        this.compradores=Comprador.LeerCompradorInFile();
     }    
 
     @FXML
-    private void irMenuVendedor(MouseEvent event) {
-        try {
-            FXMLLoader fxmloader=App.LoadFXMLLoader("VistaVendedor");
-            App.setRoot(fxmloader);
-            VistaVendedorController vvc=fxmloader.getController();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+    private void AceptarOferta(MouseEvent event) {
+        double oferta=Double.parseDouble(TextoMonto.getText());
+        String correo=this.correoComprador;
+        //FALTA MATRICULA O CORREO DEL VENDEDOR
         
     }
 
     @FXML
-    private void irMenuComprador(MouseEvent event) {
+    private void Cancelar(MouseEvent event) {
         try {
-            FXMLLoader fxmloader=App.LoadFXMLLoader("VistaComprador");
+            FXMLLoader fxmloader=App.LoadFXMLLoader("VistaOfertarComprador");
             App.setRoot(fxmloader);
-            VistaCompradorController vcc=fxmloader.getController();
+            VistaOfertarCompradorController p=fxmloader.getController();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
-
-    @FXML
-    private void Salir(MouseEvent event) {
-        System.exit(0);
     }
     
 }

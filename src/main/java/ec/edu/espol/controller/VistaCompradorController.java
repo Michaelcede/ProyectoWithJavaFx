@@ -7,6 +7,7 @@ package ec.edu.espol.controller;
 
 import ec.edu.espol.model.Comprador;
 import ec.edu.espol.model.Persona;
+import ec.edu.espol.model.Vendedor;
 import ec.edu.espol.proyectofinal.App;
 import java.io.IOException;
 import java.net.URL;
@@ -35,7 +36,7 @@ public class VistaCompradorController implements Initializable {
     @FXML
     private GridPane PanelComprador;
     ArrayList<Comprador> Lista_Compradores = new ArrayList<>();
-
+    public String correoComprador;
 
 
     /**
@@ -43,10 +44,13 @@ public class VistaCompradorController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        //Comprador.cargarArchivo();
         this.Lista_Compradores=Comprador.LeerCompradorInFile();
-    }    
+    }
 
+    public String getCorreoComprador() {
+        return correoComprador;
+    }      
     @FXML
     private void RegresardesdeComprador(MouseEvent event) {
         try {
@@ -119,93 +123,52 @@ public class VistaCompradorController implements Initializable {
     @FXML
     private void Ofertar(MouseEvent event) {
         PanelComprador.getChildren().clear();
-        Text t1 = new Text("Tipo de vehículo: ");
-        PanelComprador.add(t1, 1, 0);
-        TextField tf1 = new TextField();
-        tf1.setMaxWidth(75);
-        PanelComprador.add(tf1, 2, 0);
-        Text t2 = new Text("Recorrido: ");
-        PanelComprador.add(t2, 1, 1);
-        TextField tf2 = new TextField();
-        tf2.setMaxWidth(75);
-        PanelComprador.add(tf2, 2, 1);
-        Text g1 = new Text(":");
-        PanelComprador.add(g1, 3, 1);
-        TextField tf7 = new TextField();
-        tf7.setMaxWidth(75);
-        PanelComprador.add(tf7, 4, 1);
-        Text t3=new Text("Año:");
-        PanelComprador.add(t3, 1, 2);
-        TextField tf3=new TextField();
-        tf3.setMaxWidth(75);
-        PanelComprador.add(tf3, 2, 2);
-        Text g2 = new Text(":");
-        PanelComprador.add(g2, 3, 2);
-        TextField tf8 = new TextField();
-        tf8.setMaxWidth(75);
-        PanelComprador.add(tf8, 4, 2);
-        Text t4=new Text("Precio:");
-        PanelComprador.add(t4, 1, 3);
-        TextField tf4=new TextField();
-        tf4.setMaxWidth(75);
-        PanelComprador.add(tf4, 2, 3);
-        Text g3 = new Text(":");
-        PanelComprador.add(g3, 3, 3);
-        TextField tf9 = new TextField();
-        tf9.setMaxWidth(75);
-        PanelComprador.add(tf9, 4, 3);
-        Button br=new Button("BUSCAR");
-        br.prefWidth(90);
-        br.prefHeight(45);
-        br.setAlignment(Pos.CENTER_RIGHT);
-        PanelComprador.add(br, 2, 4);
-        br.setOnMouseClicked((MouseEvent e)->{
-            PanelComprador.getChildren().clear();
-            Text t11 = new Text("Placa: ");
-            PanelComprador.add(t11, 1, 0);
-            Text t12 = new Text("Marca: ");
-            PanelComprador.add(t12, 1, 1);
-            Text t13 = new Text("Modelo: ");
-            PanelComprador.add(t13, 1, 2);
-            Text t14 = new Text("Tipo Motor: ");
-            PanelComprador.add(t14, 1, 3);
-            PanelComprador.add(t3, 1, 4);
-            Text t15 = new Text("Recorrido: ");
-            PanelComprador.add(t15, 1, 5);
-            Text t16 = new Text("Color: ");
-            PanelComprador.add(t16, 4, 0);
-            Text t17 = new Text("Tipo combustible: ");
-            PanelComprador.add(t17, 4, 1);
-            Text t18 = new Text("Vidrios: ");
-            PanelComprador.add(t18, 4, 2);
-            Text t19 = new Text("Transmisión: ");
-            PanelComprador.add(t19, 4, 3);
-            Text t10 = new Text("Tracción: ");
-            PanelComprador.add(t10, 4, 4);
-            PanelComprador.add(t4, 4, 5);
-            Button br1 = new Button("BEFORE");
-            br.prefWidth(90);
-            br.prefHeight(45);
-            br.setAlignment(Pos.CENTER_RIGHT);
-            PanelComprador.add(br1, 6, 1);
-            Button br2 = new Button("AFTER");
-            br.prefWidth(90);
-            br.prefHeight(45);
-            br.setAlignment(Pos.CENTER_RIGHT);
-            PanelComprador.add(br2, 6, 3);
-            
-            
-            
-        });
-        
-    }
-    class CorreoException extends Exception{
-        public CorreoException(String message) {
-            super(message);
-        }
-        
-    }
+        Text t1=new Text("Correo: ");
+        Text t2=new Text("Contraseña: ");
+        TextField tfUser=new TextField();
+        PasswordField tfPsw=new PasswordField();
+        Button b=new Button("Ingresar");
+        PanelComprador.add(t1,1,1);
+        PanelComprador.add(t2,1,2);
+        PanelComprador.add(tfUser,2,1);
+        PanelComprador.add(tfPsw,2,2);
+        PanelComprador.add(b,2,3);
+        b.setOnMouseClicked((MouseEvent me)->{
+            String correo=tfUser.getText();
+            String contraseña_sinHash=tfPsw.getText();
+            String contraseña=Persona.convertirSHA256(contraseña_sinHash);
+            Alert a;
+            if(!(tfUser.getText().isEmpty() || tfPsw.getText().isEmpty())){
+                boolean cond=false;
+                for(Comprador c:this.Lista_Compradores){
+                    if(correo.contains(c.getCorreo()) && contraseña.contains(c.getClave())){
+                        cond=true;
+                    }
+                }
+                if(cond==true){
+                    this.correoComprador=correo;
+                    a=new Alert(AlertType.CONFIRMATION,"Bienvenido "+ correo);
+                    a.show();
+                    
+                    try {
+                        FXMLLoader fxmloader=App.LoadFXMLLoader("VistaOfertarComprador");
+                        App.setRoot(fxmloader);
+                        VistaOfertarCompradorController voc=fxmloader.getController();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } 
+                }
+                else{
+                    a=new Alert(AlertType.ERROR,"El correo no se encuentra registrado o introdujo datos erroneos");
+                    a.show();
+                }
+            }
+            else{
+                a=new Alert(AlertType.WARNING,"Existen campos en blanco");
+                a.show();
+            }
 
-    
+        });
+    }    
 }
 

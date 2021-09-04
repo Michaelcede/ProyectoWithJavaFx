@@ -74,7 +74,7 @@ public class VistaVehiculoController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        Vehiculo.cargarArchivo();
+        //Vehiculo.cargarArchivo();
         this.ListaVehiculos = Vehiculo.LeerVehiculosFile();
     }   
     
