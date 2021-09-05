@@ -6,6 +6,7 @@
 package ec.edu.espol.controller;
 
 import ec.edu.espol.model.Comprador;
+import ec.edu.espol.model.Oferta;
 import ec.edu.espol.proyectofinal.App;
 import java.io.IOException;
 import java.net.URL;
@@ -14,6 +15,8 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
@@ -27,12 +30,12 @@ public class AceptarOfertaController extends VistaOfertarCompradorController imp
     @FXML
     private TextField TextoMonto;
     ArrayList<Comprador>compradores=new ArrayList<>();
-    /**
-     * Initializes the controller class.
-     */
+    ArrayList<Oferta>ofertas = new ArrayList<>();
+  
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.compradores=Comprador.LeerCompradorInFile();
+        this.ofertas = Oferta.LeerOfertaFile();
     }    
 
     @FXML
@@ -41,6 +44,21 @@ public class AceptarOfertaController extends VistaOfertarCompradorController imp
         String correo=this.correoComprador;
         //FALTA MATRICULA O CORREO DEL VENDEDOR
         
+        if(!(TextoMonto.getText().isEmpty() )){
+            String monto = TextoMonto.getText();
+            if (monto.matches("[0-10000000000]*")) {
+                Alert a = new Alert(AlertType.CONFIRMATION, "Oferta registrada");
+                a.show();
+            } 
+            else {
+                Alert a=new Alert(AlertType.WARNING,"formato precio erroneo/ No numérico");
+                a.show();
+            }
+        }
+        else{
+            Alert a = new Alert(AlertType.WARNING,"ERROR, No ha realizado una oferta");
+        }
+        Oferta.RegistrarOfertaFile(ofertas);
     }
 
     @FXML
@@ -53,5 +71,3 @@ public class AceptarOfertaController extends VistaOfertarCompradorController imp
             ex.printStackTrace();
         }
     }
-    
-}
