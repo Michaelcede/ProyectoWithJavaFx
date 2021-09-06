@@ -54,4 +54,7 @@
          </children>
       </HBox>
    </bottom>
+   <right>
+      <Button mnemonicParsing="false" onMouseClicked="#info" prefHeight="500.0" text="INFO" BorderPane.alignment="CENTER" />
+   </right>
 </BorderPane>
