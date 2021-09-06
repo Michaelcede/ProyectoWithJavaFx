@@ -6,8 +6,8 @@
 package ec.edu.espol.controller;
 
 import ec.edu.espol.model.Comprador;
-import ec.edu.espol.model.Oferta;
 import ec.edu.espol.proyectofinal.App;
+import ec.edu.espol.model.Oferta;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,10 +15,10 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /**
  * FXML Controller class
@@ -31,11 +31,13 @@ public class AceptarOfertaController extends VistaOfertarCompradorController imp
     private TextField TextoMonto;
     ArrayList<Comprador>compradores=new ArrayList<>();
     ArrayList<Oferta>ofertas = new ArrayList<>();
-  
+    /**
+     * Initializes the controller class.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.compradores=Comprador.LeerCompradorInFile();
-        this.ofertas = Oferta.LeerOfertaFile();
+        //this.ofertas = Oferta.LeerOfertaFile();
     }    
 
     @FXML
@@ -43,7 +45,6 @@ public class AceptarOfertaController extends VistaOfertarCompradorController imp
         double oferta=Double.parseDouble(TextoMonto.getText());
         String correo=this.correoComprador;
         //FALTA MATRICULA O CORREO DEL VENDEDOR
-        
         if(!(TextoMonto.getText().isEmpty() )){
             String monto = TextoMonto.getText();
             if (monto.matches("[0-10000000000]*")) {
@@ -59,6 +60,7 @@ public class AceptarOfertaController extends VistaOfertarCompradorController imp
             Alert a = new Alert(AlertType.WARNING,"ERROR, No ha realizado una oferta");
         }
         Oferta.RegistrarOfertaFile(ofertas);
+        
     }
 
     @FXML
@@ -71,3 +73,5 @@ public class AceptarOfertaController extends VistaOfertarCompradorController imp
             ex.printStackTrace();
         }
     }
+    
+}

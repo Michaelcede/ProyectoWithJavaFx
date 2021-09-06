@@ -60,5 +60,17 @@ public class PrincipalController implements Initializable {
     private void Salir(MouseEvent event) {
         System.exit(0);
     }
+
+    @FXML
+    private void RegistrarAmbos(MouseEvent event) {
+        try {
+            FXMLLoader fxmloader=App.LoadFXMLLoader("RegistroAmbos");
+            App.setRoot(fxmloader);
+            RegistroAmbosController vcc=fxmloader.getController();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }                
+                
+    }
     
 }

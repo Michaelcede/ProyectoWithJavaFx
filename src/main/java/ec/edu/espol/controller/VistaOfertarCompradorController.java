@@ -11,13 +11,18 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -55,10 +60,14 @@ public class VistaOfertarCompradorController extends VistaCompradorController im
     public void initialize(URL url, ResourceBundle rb) {
         //Vehiculo.cargarArchivo();
         this.vehiculos=Vehiculo.LeerVehiculosFile();
+        this.vehiculos.remove(0);
+        this.vehiculos.sort((Vehiculo v1,Vehiculo v2)->{
+            return Double.compare(v2.getPrecio(),v1.getPrecio());
+        });
     }    
 
     @FXML
-    private void BuscarOferta(MouseEvent event) {
+ private void BuscarOferta(MouseEvent event) {
         VBoxOfertas.getChildren().clear();
         if(tipoVehiculoTF.getText().isEmpty() || RecorrioIniTF.getText().isEmpty() || RecorrioFinTF.getText().isEmpty() || AnioIniTF.getText().isEmpty() || AnioFinTF.getText().isEmpty() || PrecioIniTF.getText().isEmpty() || PrecioFinTF.getText().isEmpty()){
            for(Vehiculo v:this.vehiculos){
@@ -108,7 +117,6 @@ public class VistaOfertarCompradorController extends VistaCompradorController im
             }
         }
     }
-
     @FXML
     private void RegresaraComprador(MouseEvent event) {
         try {

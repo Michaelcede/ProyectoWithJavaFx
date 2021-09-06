@@ -5,7 +5,6 @@
  */
 package ec.edu.espol.controller;
 
-import ec.edu.espol.model.Mail;
 import ec.edu.espol.model.Persona;
 import ec.edu.espol.model.Vendedor;
 import ec.edu.espol.proyectofinal.App;
@@ -28,6 +27,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import ec.edu.espol.model.Mail;
 
 /**
  * FXML Controller class
@@ -101,8 +101,8 @@ public class VistaVendedorController implements Initializable {
                 String Clave=Persona.convertirSHA256(pw.getText());
                 Vendedor v=new Vendedor(Nombre,Apellido,Correo,Organizacion,Clave);
                 if(Persona.validarEmail(tf4.getText())==true && Vendedor.comprobarEstadoenLista(v,this.Lista_Vendedores)==false){
-                        Mail.sendMail(Correo);
-                        this.Lista_Vendedores.add(v);
+                    Mail.sendMail(Correo);    
+                    this.Lista_Vendedores.add(v);
                         a=new Alert(AlertType.CONFIRMATION,"Usuario guardado con exito");
                         a.show();  
                 }
