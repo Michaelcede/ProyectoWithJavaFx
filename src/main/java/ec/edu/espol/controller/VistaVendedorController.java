@@ -5,6 +5,7 @@
  */
 package ec.edu.espol.controller;
 
+import ec.edu.espol.model.Comprador;
 import ec.edu.espol.model.Persona;
 import ec.edu.espol.model.Vendedor;
 import ec.edu.espol.proyectofinal.App;
@@ -146,17 +147,6 @@ public class VistaVendedorController implements Initializable {
         PanelVendedor.add(tfUser,2,1);
         PanelVendedor.add(tfPsw,2,2);
         PanelVendedor.add(b,2,3);
-        //-------------------------
-        StringBuilder sb=new StringBuilder();
-        for(Vendedor v:this.Lista_Vendedores){
-            sb.append(v.getCorreo());
-            sb.append("---------");
-            sb.append(v.getClave());
-            sb.append("\n");
-        }
-        Text tt=new Text(sb.toString());
-        PanelVendedor.add(tt,0,4);
-        //--------------------------
         b.setOnMouseClicked((MouseEvent me)->{
             String correo=tfUser.getText();
             String contraseña_sinHash=tfPsw.getText();
@@ -193,5 +183,87 @@ public class VistaVendedorController implements Initializable {
         });
             
         
+    }
+
+    @FXML
+    private void info(MouseEvent event) {
+        PanelVendedor.getChildren().clear();
+        Text t1=new Text("Correo: ");
+        Text t2=new Text("Contraseña: ");
+        TextField tfUser=new TextField();
+        PasswordField tfPsw=new PasswordField();
+        Button b=new Button("Ingresar");
+        PanelVendedor.add(t1,1,1);
+        PanelVendedor.add(t2,1,2);
+        PanelVendedor.add(tfUser,2,1);
+        PanelVendedor.add(tfPsw,2,2);
+        PanelVendedor.add(b,2,3);
+        b.setOnMouseClicked((MouseEvent me)->{
+            String correo=tfUser.getText();
+            String contraseña_sinHash=tfPsw.getText();
+            String contraseña=Persona.convertirSHA256(contraseña_sinHash);
+            Alert a;
+            if(!(tfUser.getText().isEmpty() || tfPsw.getText().isEmpty())){
+                boolean cond=false;
+                for(Vendedor v:this.Lista_Vendedores){
+                    if(correo.contains(v.getCorreo()) && contraseña.contains(v.getClave())){
+                        cond=true;
+                    }
+                }
+                if(cond==true){
+                    a=new Alert(AlertType.CONFIRMATION,"Bienvenido "+ correo);
+                    a.show();
+                    PanelVendedor.getChildren().clear();
+                    for(Vendedor v:this.Lista_Vendedores){
+                        if(correo.contains(v.getCorreo()) && contraseña.contains(v.getClave())){
+                            Text tn=new Text("Nombre: "+v.getNombres());
+                            Text tn2=new Text("Apellido: "+v.getApellidos());
+                            Text tn3=new Text("Correo: "+v.getCorreo());
+                            Text tn4=new Text("Organizacion: "+v.getOrganizacion());
+                            Text tn5=new Text("Cambiar Clave:");
+                            PasswordField psold=new PasswordField();
+                            PasswordField psnew=new PasswordField();
+                            Button bn=new Button("CAMBIAR");
+                            PanelVendedor.add(tn,0,0);
+                            PanelVendedor.add(tn2,0,1);
+                            PanelVendedor.add(tn3,0,2);
+                            PanelVendedor.add(tn4,0,3);
+                            PanelVendedor.add(tn5,0,4);
+                            PanelVendedor.add(psold,1,4);
+                            PanelVendedor.add(psnew,2,4);
+                            PanelVendedor.add(bn,3,4);
+                            bn.setOnMouseClicked((MouseEvent me2)->{
+                                if(!(psold.getText().isEmpty() || psnew.getText().isEmpty())){
+                                    if(Persona.convertirSHA256(psold.getText()).equals(v.getClave())){
+                                        v.setClave(Persona.convertirSHA256(psnew.getText()));
+                                        Alert e=new Alert(AlertType.CONFIRMATION,"Clave cambiada con exito");
+                                        e.show();
+                                        Vendedor.RegistrarVendedorFile(Lista_Vendedores);
+                                    }
+                                    else{
+                                        Alert e=new Alert(AlertType.WARNING,"Contraseña incorrecta");
+                                        e.show();
+                                    }
+                                    
+                                }
+                                else{
+                                    Alert e=new Alert(AlertType.WARNING,"Campos vacios");
+                                    e.show();
+                                }
+                            });
+                    }
+                    }
+                }
+                else{
+                    a=new Alert(AlertType.ERROR,"El correo no se encuentra registrado o introdujo datos erroneos");
+                    a.show();
+                }
+            }
+            else{
+                a=new Alert(AlertType.WARNING,"Existen campos en blanco");
+                a.show();
+            }
+            
+        });
     }
 }

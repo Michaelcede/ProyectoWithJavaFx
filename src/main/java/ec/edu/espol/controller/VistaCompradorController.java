@@ -170,5 +170,86 @@ public class VistaCompradorController implements Initializable {
 
         });
     }    
+
+    @FXML
+    private void info(MouseEvent event) {
+        PanelComprador.getChildren().clear();
+        Text t1=new Text("Correo: ");
+        Text t2=new Text("Contraseña: ");
+        TextField tfUser=new TextField();
+        PasswordField tfPsw=new PasswordField();
+        Button b=new Button("Ingresar");
+        PanelComprador.add(t1,1,1);
+        PanelComprador.add(t2,1,2);
+        PanelComprador.add(tfUser,2,1);
+        PanelComprador.add(tfPsw,2,2);
+        PanelComprador.add(b,2,3);
+        b.setOnMouseClicked((MouseEvent me)->{
+            String correo=tfUser.getText();
+            String contraseña_sinHash=tfPsw.getText();
+            String contraseña=Persona.convertirSHA256(contraseña_sinHash);
+            Alert a;
+            if(!(tfUser.getText().isEmpty() || tfPsw.getText().isEmpty())){
+                boolean cond=false;
+                for(Comprador v:this.Lista_Compradores){
+                    if(correo.contains(v.getCorreo()) && contraseña.contains(v.getClave())){
+                        cond=true;
+                    }
+                }
+                if(cond==true){
+                    a=new Alert(AlertType.CONFIRMATION,"Bienvenido "+ correo);
+                    a.show();
+                    PanelComprador.getChildren().clear();
+                    for(Comprador v:this.Lista_Compradores){
+                        if(correo.contains(v.getCorreo()) && contraseña.contains(v.getClave())){
+                            Text tn=new Text("Nombre: "+v.getNombres());
+                            Text tn2=new Text("Apellido: "+v.getApellidos());
+                            Text tn3=new Text("Correo: "+v.getCorreo());
+                            Text tn4=new Text("Organizacion: "+v.getOrganizacion());
+                            Text tn5=new Text("Cambiar Clave:");
+                            PasswordField psold=new PasswordField();
+                            PasswordField psnew=new PasswordField();
+                            Button bn=new Button("CAMBIAR");
+                            PanelComprador.add(tn,0,0);
+                            PanelComprador.add(tn2,0,1);
+                            PanelComprador.add(tn3,0,2);
+                            PanelComprador.add(tn4,0,3);
+                            PanelComprador.add(tn5,0,4);
+                            PanelComprador.add(psold,1,4);
+                            PanelComprador.add(psnew,2,4);
+                            PanelComprador.add(bn,3,4);
+                            bn.setOnMouseClicked((MouseEvent me2)->{
+                                if(!(psold.getText().isEmpty() || psnew.getText().isEmpty())){
+                                    if(Persona.convertirSHA256(psold.getText()).equals(v.getClave())){
+                                        v.setClave(Persona.convertirSHA256(psnew.getText()));
+                                        Alert e=new Alert(AlertType.CONFIRMATION,"Clave cambiada con exito");
+                                        e.show();
+                                        Comprador.RegistrarCompradorFile(Lista_Compradores);
+                                    }
+                                    else{
+                                        Alert e=new Alert(AlertType.WARNING,"Contraseña incorrecta");
+                                        e.show();
+                                    }
+                                }
+                                else{
+                                    Alert e=new Alert(AlertType.WARNING,"Campos vacios");
+                                    e.show();
+                                }
+                            });
+                    }
+                    }
+                }
+                else{
+                    a=new Alert(AlertType.ERROR,"El correo no se encuentra registrado o introdujo datos erroneos");
+                    a.show();
+                }
+            }
+            else{
+                a=new Alert(AlertType.WARNING,"Existen campos en blanco");
+                a.show();
+            }
+            
+        });
+    }
 }
 
